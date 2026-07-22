@@ -1,0 +1,33 @@
+{
+  "year": 2024,
+  "brackets": [
+    { "upTo": 55867, "rate": 0.15 },
+    { "upTo": 111733, "rate": 0.205 },
+    { "upTo": 173205, "rate": 0.26 },
+    { "upTo": 246752, "rate": 0.29 },
+    { "upTo": null, "rate": 0.33 }
+  ],
+  "bpa": {
+    "base": 15705,
+    "phaseOutStart": 173205,
+    "phaseOutEnd": 246752,
+    "minimum": 14156
+  },
+  "canadaEmploymentAmount": 1433,
+  "rrspMaxLimit": 31560,
+  "fhsaAnnualLimit": 8000,
+  "fhsaLifetimeLimit": 40000,
+  "rrspOvercontributionAllowance": 2000,
+  "eiClawbackThreshold": 79000,
+  "oasClawbackThreshold": 90997,
+  "dividendGrossUp": { "eligible": 1.38, "nonEligible": 1.15 },
+  "dividendCreditRate": { "eligible": 0.150198, "nonEligible": 0.090301 },
+  "cppBaseRate": 0.0495,
+  "cppEnhancedRate": 0.01,
+  "cppBasicExemption": 3500,
+  "cppYMPE": 68500,
+  "cppYAMPE": 73200,
+  "cpp2Rate": 0.04,
+  "_source": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/canadian-income-tax-rates-individuals-current-previous-years.html",
+  "_lastUpdated": "2026-05-15"
+}

@@ -1,0 +1,34 @@
+{
+  "year": 2025,
+  "_bracket1Note": "2025 中产减税: 第 1 档 7 月 1 日起 15% → 14%, 全年加权平均 = 14.5%. 抵免也按 14.5% 计算 (credits.ts 自动用 brackets[0].rate). 2026+ 改为 14%.",
+  "brackets": [
+    { "upTo": 57375, "rate": 0.145 },
+    { "upTo": 114750, "rate": 0.205 },
+    { "upTo": 177882, "rate": 0.26 },
+    { "upTo": 253414, "rate": 0.29 },
+    { "upTo": null, "rate": 0.33 }
+  ],
+  "bpa": {
+    "base": 16129,
+    "phaseOutStart": 177882,
+    "phaseOutEnd": 253414,
+    "minimum": 14538
+  },
+  "canadaEmploymentAmount": 1471,
+  "rrspMaxLimit": 32490,
+  "fhsaAnnualLimit": 8000,
+  "fhsaLifetimeLimit": 40000,
+  "rrspOvercontributionAllowance": 2000,
+  "eiClawbackThreshold": 82125,
+  "oasClawbackThreshold": 93454,
+  "dividendGrossUp": { "eligible": 1.38, "nonEligible": 1.15 },
+  "dividendCreditRate": { "eligible": 0.150198, "nonEligible": 0.090301 },
+  "cppBaseRate": 0.0495,
+  "cppEnhancedRate": 0.01,
+  "cppBasicExemption": 3500,
+  "cppYMPE": 71300,
+  "cppYAMPE": 81200,
+  "cpp2Rate": 0.04,
+  "_source": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/canadian-income-tax-rates-individuals-current-previous-years.html",
+  "_lastUpdated": "2025-01-15"
+}

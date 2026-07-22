@@ -1,0 +1,57 @@
+{
+  "year": 2025,
+  "code": "BC",
+  "nameEn": "British Columbia",
+  "nameZh": "不列颤哥伦比亚省",
+  "brackets": [
+    {
+      "upTo": 49279,
+      "rate": 0.0506
+    },
+    {
+      "upTo": 98560,
+      "rate": 0.077
+    },
+    {
+      "upTo": 113158,
+      "rate": 0.105
+    },
+    {
+      "upTo": 137407,
+      "rate": 0.1229
+    },
+    {
+      "upTo": 186306,
+      "rate": 0.147
+    },
+    {
+      "upTo": 259829,
+      "rate": 0.168
+    },
+    {
+      "upTo": null,
+      "rate": 0.205
+    }
+  ],
+  "bpa": {
+    "base": 12932
+  },
+  "basicTaxReduction": {
+    "maxAmount": 562,
+    "phaseOutStart": 25020,
+    "phaseOutRate": 0.0356
+  },
+  "dividendCreditRate": {
+    "eligible": 0.12,
+    "nonEligible": 0.0196
+  },
+  "salesTaxCredit": {
+    "maxAmount": 75,
+    "phaseOutStart": 15000,
+    "phaseOutRate": 0.02
+  },
+  "_source": "https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal/tax-rates",
+  "_lastUpdated": "2026-05-27",
+  "_dividendCreditSource": "https://www.taxtips.ca/bctax/dividend-tax-credit.htm — 2019+ non-eligible rate = 1.96% of grossed-up",
+  "_salesTaxCreditSource": "https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal/credits/sales-tax — TICKET-026: BC Sales Tax Credit (Form BC479, refundable, T1 line 47900). Single filer: $75 max, reduced 2% of net income over $15,000 (fully phased out at net income ≥ $18,750). Spousal variant ($75 extra, family-net-income threshold $18,000) NOT modelled — engine has no spouse/marital-status concept. Stable since 2013; verified against WS export at net income $14,535 (credit=$75.00) and $16,129 (credit=$52.42→$52), both matching to the cent."
+}

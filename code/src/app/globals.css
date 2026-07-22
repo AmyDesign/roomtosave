@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens. Three colours, three jobs -- that split is the whole idea:
+ *
+ *   ink   (#1F1D1B)  structure: section headers, primary button, focus
+ *   blue  (#2563EB)  position:  the progress bar, and nothing else
+ *   green/red        outcome:   the refund / owing figure
+ *
+ * Because ink is achromatic it never competes for attention, so when blue or
+ * green does appear it reads as information rather than decoration.
+ *
+ * Neutrals are warm rather than pure grey -- at full-page scale pure grey reads
+ * cold and clinical, and the difference costs nothing.
+ *
+ * Light mode only (deliberate: this is a daytime tax tool).
+ */
+:root {
+  color-scheme: light;
+
+  /* Surfaces -- page is a warm near-white so white cards sit a step above it */
+  --page: #f7f6f4;
+  --surface: #ffffff;
+  --surface-sunken: #f3f1ee;
+
+  /* Text -- three levels only, so the hierarchy stays legible */
+  --text: #1f1d1b;
+  --text-secondary: #5f5a54;
+  --text-muted: #948e86;
+
+  /* Hairlines */
+  --line: #e6e3de;
+  --line-strong: #d4d0c9;
+
+  /* Ink: section headers, primary action, focus ring */
+  --accent: #1f1d1b;
+  --accent-hover: #3d3934;
+  --accent-bg: #ebe8e4;
+  --accent-soft: #c6c1b9;
+
+  /* Box-number badge */
+  --badge-bg: #f2f0ec;
+  --badge-line: #e0dbd4;
+  --badge-ink: #4a453e;
+
+  /* Progress: the only place colour signals "where you are" */
+  --prog: #2563eb;
+  --prog-track: #dfe5ec;
+
+  /* Semantic. The refund/owing figure is the one number in this tool that
+     carries feeling -- it earns colour; ordinary amounts do not. */
+  --positive: #0f6e56;
+  --positive-bg: #e1f5ee;
+  --positive-text: #04342c;
+  --negative: #a32d2d;
+  --negative-bg: #fcebeb;
+  --negative-text: #501313;
+
+  --warning-bg: #faeeda;
+  --warning-text: #854f0b;
+}
+
+html,
+body {
+  background-color: var(--page);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular figures wherever numbers matter -- amounts must align column-wise so
+   a wrong order of magnitude is visible at a glance. */
+input[type="number"],
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Hide number input arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Focus: a thin ring, never a glow */
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 3px var(--accent);
+  border-radius: 3px;
+}
+
+/*
+ * Slip fields: two columns that read DOWN each column, so the run of box
+ * numbers stays in order. A row-major grid zig-zags (14 -> 17, back to 17A),
+ * which is the one order you are NOT following while copying a slip.
+ * --rows is set per section by the component.
+ */
+.box-grid {
+  display: grid;
+  gap: 16px 20px;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--rows, 1), auto);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 640px) {
+  .box-grid {
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+/* A section with a single field should not stretch it across both columns. */
+.box-grid--single {
+  grid-template-columns: minmax(0, calc(50% - 10px));
+}
+@media (max-width: 640px) {
+  .box-grid--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/*
+ * Progress bar sizing is variable-driven so a breakpoint only has to change
+ * --prog-step; the connector's negative margins are derived from it. Hard-coding
+ * those margins meant every size change knocked the line off the dots.
+ */
+.progress {
+  --prog-step: 110px;
+  --prog-dot: 28px;
+  --prog-gap: 8px;
+}
+.progress-seg {
+  margin-top: calc(var(--prog-dot) / 2 - 2.5px);
+  margin-left: calc(-1 * ((var(--prog-step) - var(--prog-dot)) / 2 - var(--prog-gap)));
+  margin-right: calc(-1 * ((var(--prog-step) - var(--prog-dot)) / 2 - var(--prog-gap)));
+}
+@media (max-width: 900px) {
+  .progress {
+    --prog-step: 96px;
+  }
+}
+@media (max-width: 760px) {
+  .progress {
+    --prog-step: 84px;
+  }
+}
+@media (max-width: 640px) {
+  .progress {
+    --prog-step: 64px;
+    --prog-dot: 22px;
+    --prog-gap: 5px;
+  }
+}
+@media (max-width: 400px) {
+  .progress {
+    --prog-step: 56px;
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "module": "CommonJS", "moduleResolution": "node",
+    "esModuleInterop": true, "resolveJsonModule": true, "skipLibCheck": true,
+    "strict": false, "outDir": "/tmp/engine-dist", "rootDir": "src/lib/tax", "baseUrl": "."
+  },
+  "include": ["src/lib/tax/**/*.ts"],
+  "exclude": ["src/lib/tax/__tests__/**"]
+}

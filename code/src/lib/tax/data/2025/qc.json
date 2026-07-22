@@ -1,0 +1,36 @@
+{
+  "year": 2025,
+  "code": "QC",
+  "nameEn": "Quebec",
+  "nameZh": "魁北克省",
+  "brackets": [
+    { "upTo": 53255, "rate": 0.14 },
+    { "upTo": 106495, "rate": 0.19 },
+    { "upTo": 129590, "rate": 0.24 },
+    { "upTo": null, "rate": 0.2575 }
+  ],
+  "bpa": { "base": 18571 },
+  "federalAbatementRate": 0.165,
+  "pensionBaseRate": 0.054,
+  "pensionEnhancedRate": 0.01,
+  "qpipEmployeeRate": 0.00494,
+  "qpipSelfEmployedRate": 0.00878,
+  "qpipMaxInsurable": 98000,
+  "dividendCreditRate": {
+    "eligible": 0.117,
+    "nonEligible": 0.0342
+  },
+  "workersDeduction": 1420,
+  "drugInsurancePremium": 755,
+  "healthServicesFundThreshold1": 18130,
+  "healthServicesFundThreshold2": 63060,
+  "healthServicesFundRate": 0.01,
+  "healthServicesFundTier1Max": 150,
+  "healthServicesFundMax": 1000,
+  "drugInsurancePremiumRate1": 0.0784,
+  "drugInsurancePremiumRate2": 0.1176,
+  "drugInsurancePremiumTier1Band": 5000,
+  "drugInsurancePremiumExemption": 19890,
+  "creditsOnlyBPA": true,
+  "_lastUpdated": "2026-06-30"
+}

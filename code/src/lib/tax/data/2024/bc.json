@@ -1,0 +1,57 @@
+{
+  "year": 2024,
+  "code": "BC",
+  "nameEn": "British Columbia",
+  "nameZh": "不列颤哥伦比亚省",
+  "brackets": [
+    {
+      "upTo": 47937,
+      "rate": 0.0506
+    },
+    {
+      "upTo": 95875,
+      "rate": 0.077
+    },
+    {
+      "upTo": 110076,
+      "rate": 0.105
+    },
+    {
+      "upTo": 133664,
+      "rate": 0.1229
+    },
+    {
+      "upTo": 181232,
+      "rate": 0.147
+    },
+    {
+      "upTo": 252752,
+      "rate": 0.168
+    },
+    {
+      "upTo": null,
+      "rate": 0.205
+    }
+  ],
+  "bpa": {
+    "base": 12580
+  },
+  "basicTaxReduction": {
+    "maxAmount": 521,
+    "phaseOutStart": 21418,
+    "phaseOutRate": 0.0356
+  },
+  "dividendCreditRate": {
+    "eligible": 0.12,
+    "nonEligible": 0.0196
+  },
+  "salesTaxCredit": {
+    "maxAmount": 75,
+    "phaseOutStart": 15000,
+    "phaseOutRate": 0.02
+  },
+  "_source": "https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal/tax-rates",
+  "_lastUpdated": "2026-05-27",
+  "_dividendCreditSource": "https://www.taxtips.ca/bctax/dividend-tax-credit.htm — 2019+ non-eligible rate = 1.96% of grossed-up",
+  "_salesTaxCreditSource": "https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal/credits/sales-tax — TICKET-026: BC Sales Tax Credit (Form BC479, refundable, T1 line 47900). Parameters ($75 max, 2% phase-out over $15,000 net income, single filer) unchanged 'for 2013 and later years' per official source — applied to 2024 by inference, NOT independently verified against a 2024 WS export (only 2025 was empirically confirmed). Flag for spot-check if a 2024 discrepancy ever surfaces."
+}

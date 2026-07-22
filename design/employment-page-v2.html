@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>就业收入页 — 设计稿 v2</title>
+<style>
+  :root{
+    --page:#F7F5F2; --surface:#FFFFFF; --sunken:#F1EEE9;
+    --ink:#2A2724; --ink-2:#6B655D; --ink-3:#9C958B;
+    --line:#E6E1D9; --line-2:#D2CBC0;
+    --accent:#B4542B; --accent-hover:#8E3F1E; --accent-bg:#FBF0E9;
+    --positive:#2F6B4F; --positive-bg:#E9F2EC;
+    --radius:5px;
+    --serif:Caslon,"Big Caslon","Hoefler Text",Georgia,"Songti SC","Noto Serif CJK SC",serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--page);color:var(--ink);
+    font:400 14px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px;margin:0 auto;padding:0 20px 72px}
+
+  /* ---------- 页头 ---------- */
+  .top{display:flex;align-items:center;justify-content:space-between;padding:26px 0 20px}
+  .brand{font-family:var(--serif);font-size:19px;letter-spacing:-0.01em}
+  .top-right{display:flex;align-items:center;gap:14px}
+  .ctx{font-size:13px;color:var(--ink-2)}
+  .ctx b{font-weight:400;color:var(--ink)}
+  .lang{display:flex;gap:8px;font-size:13px}
+  .lang a{color:var(--ink-3);text-decoration:none;cursor:pointer}
+  .lang a.on{color:var(--ink);border-bottom:1px solid var(--ink)}
+
+  /* ---------- 步骤 ---------- */
+  .steps{display:flex;gap:22px;font-size:13px;padding:0 0 20px;border-bottom:1px solid var(--line)}
+  .steps div{color:var(--ink-3);display:flex;gap:7px}
+  .steps div.done{color:var(--ink-2)}
+  .steps div.now{color:var(--ink)}
+  .steps .n{font-variant-numeric:tabular-nums;color:var(--ink-3)}
+  .steps div.now .n{color:var(--accent)}
+
+  /* ---------- 标题 ---------- */
+  h1{font-family:var(--serif);font-size:30px;font-weight:400;letter-spacing:-0.015em;margin:34px 0 6px;line-height:1.15}
+  .sub{font-size:14px;color:var(--ink-2);margin:0 0 30px;max-width:44ch}
+
+  /* ---------- 分节 ---------- */
+  .sec{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 2px}
+  .sec h2{font-size:13px;font-weight:500;margin:0;letter-spacing:.02em}
+  .sec .meta{font-size:12px;color:var(--ink-3)}
+
+  /* ---------- 行：标签左，框号紧贴输入框 ---------- */
+  .row{display:flex;align-items:center;height:44px;border-top:1px solid var(--line)}
+  .row:last-of-type{border-bottom:1px solid var(--line)}
+  .lbl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lbl.hint{cursor:help;border-bottom:1px dotted var(--line-2);align-self:center;flex:0 0 auto;margin-right:auto}
+  .box{width:74px;text-align:right;padding-right:12px;font-size:12px;color:var(--ink-3);
+       font-variant-numeric:tabular-nums;flex-shrink:0}
+  .amt{width:132px;flex-shrink:0;position:relative}
+  .amt input{
+    width:100%;height:30px;border:1px solid transparent;border-bottom-color:var(--line-2);
+    border-radius:0;background:transparent;padding:0 2px 0 16px;font:inherit;font-size:14px;
+    text-align:right;font-variant-numeric:tabular-nums;color:var(--ink);outline:none;transition:.12s
+  }
+  .amt input::placeholder{color:#C9C2B7}
+  .amt input:hover{border-bottom-color:var(--ink-3)}
+  .amt input:focus{border-color:var(--accent);border-radius:var(--radius);background:var(--surface)}
+  .amt .cur{position:absolute;left:2px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--ink-3);pointer-events:none}
+
+  /* ---------- 勾选 ---------- */
+  .check{display:flex;gap:10px;align-items:flex-start;padding:20px 0 0}
+  .check input{width:15px;height:15px;margin:2px 0 0;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+  .check .note{font-size:13px;color:var(--ink-3);margin-top:1px}
+
+  /* ---------- 其他收入 ---------- */
+  .grp{margin-top:40px}
+  .opt{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;height:44px;gap:16px}
+  .opt:last-of-type{border-bottom:1px solid var(--line)}
+  .opt .t{display:flex;align-items:baseline;gap:9px;min-width:0}
+  .opt .t .tag{font-size:12px;color:var(--ink-3)}
+  .act{border:0;background:transparent;font:inherit;font-size:13px;color:var(--accent);cursor:pointer;padding:0}
+  .act:hover{color:var(--accent-hover);text-decoration:underline;text-underline-offset:3px}
+  .act.quiet{color:var(--ink-3)}
+  .act.quiet:hover{color:var(--ink-2)}
+  .open{border-top:1px solid var(--line)}
+  .open .head{display:flex;align-items:center;justify-content:space-between;height:44px;gap:16px}
+  .open .head .t{display:flex;align-items:baseline;gap:9px}
+  .open .inner{padding:0 0 14px}
+  .open .row:first-of-type{border-top:1px solid var(--line)}
+  .footnote{font-size:12px;color:var(--ink-3);padding-top:10px;line-height:1.6;max-width:52ch}
+
+  /* ---------- 底部 ---------- */
+  .bar{display:flex;justify-content:space-between;align-items:center;margin-top:38px}
+  .btn{font:inherit;font-size:14px;height:36px;padding:0 18px;border-radius:var(--radius);cursor:pointer;transition:.12s}
+  .btn.sec{background:transparent;border:1px solid var(--line-2);color:var(--ink-2)}
+  .btn.sec:hover{border-color:var(--ink-3);color:var(--ink)}
+  .btn.pri{background:var(--accent);border:1px solid var(--accent);color:#fff}
+  .btn.pri:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+  .disc{font-size:12px;color:var(--ink-3);margin-top:38px;padding-top:18px;border-top:1px solid var(--line);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">RRSP 优化器</div>
+    <div class="top-right">
+      <span class="ctx"><b>2025</b> · <b>Québec</b></span>
+      <span class="lang"><a>EN</a><a class="on">中文</a></span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="done"><span class="n">1</span>基本信息</div>
+    <div class="now"><span class="n">2</span>就业收入</div>
+    <div><span class="n">3</span>供款额度</div>
+    <div><span class="n">4</span>结果</div>
+  </div>
+
+  <h1>就业收入</h1>
+  <p class="sub">照着 T4 和 RL-1 抄写。框号列在金额左侧，顺序与单据一致。</p>
+
+  <div class="sec"><h2>T4 单据</h2><span class="meta">8 项</span></div>
+  <div class="row"><span class="lbl hint" title="扣除任何款项之前的工资总额">工资</span><span class="box">14</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="80,000.00"></span></div>
+  <div class="row"><span class="lbl">QPP 供款</span><span class="box">17</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="4,339.20"></span></div>
+  <div class="row"><span class="lbl hint" title="第一上限到第二上限之间的收入按 4% 征收，最高 $396">QPP 第二附加供款</span><span class="box">17A</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="348.00"></span></div>
+  <div class="row"><span class="lbl">EI 保费</span><span class="box">18</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="860.67"></span></div>
+  <div class="row"><span class="lbl hint" title="魁省居民此处只填联邦预扣，省税在 RL-1 Box E">联邦预扣</span><span class="box">22</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="10,000.00"></span></div>
+  <div class="row"><span class="lbl hint" title="通常等于 Box 14。未满 18 岁或部分年度免除时可能不同">可计养老金收入</span><span class="box">26</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="80,000.00"></span></div>
+  <div class="row"><span class="lbl">QPIP 保费</span><span class="box">55</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="395.20"></span></div>
+
+  <div class="sec" style="margin-top:32px"><h2>RL-1 单据</h2><span class="meta">魁省</span></div>
+  <div class="row"><span class="lbl">魁省预扣</span><span class="box">E</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="8,000.00"></span></div>
+  <div class="row"><span class="lbl hint" title="与 T4 Box 17A 相同，两张表必须一致">QPP 第二附加供款</span><span class="box">B.B</span><span class="amt"><span class="cur">$</span><input placeholder="0.00" value="348.00"></span></div>
+
+  <div class="check">
+    <input type="checkbox" id="pd">
+    <label for="pd">
+      <div>我有私人处方药保险</div>
+      <div class="note">雇主团体计划等。勾选后免缴 RAMQ 药物保险费，最高省 $755。</div>
+    </label>
+  </div>
+
+  <div class="grp">
+    <div class="sec"><h2>其他收入</h2><span class="meta">按需添加</span></div>
+
+    <div class="opt">
+      <span class="t">EI 福利 <span class="tag">T4E</span></span>
+      <button class="act">添加</button>
+    </div>
+
+    <div class="open">
+      <div class="head">
+        <span class="t">自雇收入 <span class="tag">T2125</span></span>
+        <button class="act quiet">移除</button>
+      </div>
+      <div class="inner">
+        <div class="row" style="border-bottom:0">
+          <span class="lbl hint" title="毛收入减去经营支出，取 T2125 上的净额">净收入</span><span class="box"></span>
+          <span class="amt"><span class="cur">$</span><input placeholder="0.00" value="25,000.00"></span>
+        </div>
+        <p class="footnote">自雇需缴纳雇主 + 雇员两部分 QPP，以及自雇费率的 QPIP。对应的扣除与抵免会自动计算。</p>
+      </div>
+    </div>
+
+    <div class="opt">
+      <span class="t">投资收入 <span class="tag">T5 · T3 · Schedule 3</span></span>
+      <button class="act">添加</button>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="btn sec">上一步</button>
+    <button class="btn pri">继续</button>
+  </div>
+
+  <p class="disc">本工具提供估算结果，仅供参考，不构成专业税务建议。最终金额以 CRA 评估为准。</p>
+
+</div>
+</body>
+</html>

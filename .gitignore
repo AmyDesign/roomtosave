@@ -1,0 +1,29 @@
+# Dependencies
+**/node_modules/
+
+# Next.js build output
+code/.next/
+code/out/
+
+# TypeScript incremental build info
+**/*.tsbuildinfo
+
+# Env files (never commit secrets)
+**/.env
+**/.env.*
+!**/.env.example
+
+# Editor / OS
+.obsidian/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+**/*.log
+
+# Stray empty test stubs
+code/__smoke_test__.mjs
+code/smoketest_v2.mjs
+code/.mount_test

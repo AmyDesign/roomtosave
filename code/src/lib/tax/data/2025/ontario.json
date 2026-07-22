@@ -1,0 +1,45 @@
+{
+  "year": 2025,
+  "code": "ON",
+  "nameEn": "Ontario",
+  "nameZh": "安大略省",
+  "brackets": [
+    { "upTo": 52886, "rate": 0.0505 },
+    { "upTo": 105775, "rate": 0.0915 },
+    { "upTo": 150000, "rate": 0.1116 },
+    { "upTo": 220000, "rate": 0.1216 },
+    { "upTo": null, "rate": 0.1316 }
+  ],
+  "bpa": { "base": 12747 },
+  "surtaxes": [
+    { "threshold": 5710, "rate": 0.2 },
+    { "threshold": 7307, "rate": 0.36 }
+  ],
+  "healthPremium": [
+    { "upTo": 20000, "flat": 0 },
+    { "upTo": 25000, "base": 0, "rate": 0.06, "from": 20000, "max": 300 },
+    { "upTo": 36000, "flat": 300 },
+    { "upTo": 38500, "base": 300, "rate": 0.06, "from": 36000, "max": 450 },
+    { "upTo": 48000, "flat": 450 },
+    { "upTo": 48600, "base": 450, "rate": 0.25, "from": 48000, "max": 600 },
+    { "upTo": 72000, "flat": 600 },
+    { "upTo": 72600, "base": 600, "rate": 0.25, "from": 72000, "max": 750 },
+    { "upTo": 200000, "flat": 750 },
+    { "upTo": 200600, "base": 750, "rate": 0.25, "from": 200000, "max": 900 },
+    { "upTo": null, "flat": 900 }
+  ],
+  "dividendCreditRate": {
+    "eligible": 0.1,
+    "nonEligible": 0.029863
+  },
+  "liftCredit": {
+    "max": 875,
+    "phaseOutStart": 32500,
+    "phaseOutRate": 0.05,
+    "minEarnedIncome": 3000
+  },
+  "_source": "https://www.ontario.ca/page/income-tax-rates-and-brackets",
+  "_healthPremiumSource": "https://www.ontario.ca/document/personal-income-tax/ontario-health-premium",
+  "_dividendCreditSource": "https://www.taxtips.ca/ontax/dividend-tax-credit.htm -- 2020-2026 non-eligible rate = 2.9863% of grossed-up (was 3.2863% in 2018/2019)",
+  "_lastUpdated": "2026-06-06"
+}
