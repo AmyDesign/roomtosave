@@ -11,11 +11,11 @@
 
 **三种颜色，三种职责。** 这条是整套设计的地基：
 
-| 颜色           | token                       | 职责                       |
-| ------------ | --------------------------- | ------------------------ |
-| 墨色 `#1F1D1B` | `--accent`                  | **结构**：卡片标题栏、主按钮、focus 环 |
+| 颜色           | token                       | 职责                               |
+| ------------ | --------------------------- | -------------------------------- |
+| 墨色 `#1F1D1B` | `--accent`                  | **结构**：卡片标题栏、主按钮、focus 环         |
 | 蓝色 `#2563EB` | `--prog`                    | **位置 + 品牌**：进度条、结果页滑块、页头 logo 标记 |
-| 绿 / 红        | `--positive` / `--negative` | **结果**：退税 / 补税那一个数字      |
+| 绿 / 红        | `--positive` / `--negative` | **结果**：退税 / 补税那一个数字              |
 
 墨色是无彩色，永远不抢注意力；正因为如此，蓝色或绿色一出现就自动读作「信息」
 而不是「装饰」。**每加一处颜色，就稀释一次这个效果**——所以加颜色之前要先问
@@ -36,19 +36,90 @@
 
 全部定义在 `code/src/app/globals.css` 的 `:root`，通过 `tailwind.config.ts`
 映射成 Tailwind class。**永远不要在组件里写死颜色**——改色只应该有一个地方。
+下面是**完整色板**（唯一权威来源仍是 `globals.css`，此表若与之不符以 css 为准）。
 
-```
-表面   --page #F7F6F4   --surface #FFF   --surface-sunken #F3F1EE
-文字   --text #1F1D1B   --text-secondary #5F5A54   --text-muted #948E86
-分隔线 --line #E6E3DE   --line-strong #D4D0C9
-墨色   --accent #1F1D1B --accent-hover #3D3934 --accent-bg #EBE8E4
-角标   --badge-bg #F2F0EC --badge-line #E0DBD4 --badge-ink #4A453E
-进度   --prog #2563EB   --prog-track #DFE5EC
-语义   --positive #0F6E56  --negative #A32D2D  --warning-bg/-text
-```
+#### 表面 · Surface（背景层次）
 
-**文字只有三级**（`text` / `text-secondary` / `text-muted`）。第四级会让层级
-失效——如果觉得需要第四级，通常是布局的问题，不是颜色的问题。
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--page` | `#F7F6F4` | `bg-page` | 页面底色，暖近白，让白卡片浮起一层 |
+| `--surface` | `#FFFFFF` | `bg-surface` | 卡片、输入框底色 |
+| `--surface-sunken` | `#F3F1EE` | `bg-surface-sunken` | 内嵌/次级区域：注释块、分段控件槽、示意面板 |
+
+#### 文字 · Text（**只三级**）
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--text` | `#1F1D1B` | `text-ink` | 正文、主要文字 |
+| `--text-secondary` | `#5F5A54` | `text-ink-secondary` | 次要文字：副标题、说明 |
+| `--text-muted` | `#948E86` | `text-ink-muted` | 最弱：占位符、单位、脚注 |
+
+> 第四级会让层级失效——想加第四级时，通常是布局问题，不是颜色问题。
+
+#### 分隔线 · Hairlines
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--line` | `#E6E3DE` | `border-line` | 常规分隔线、卡片边 |
+| `--line-strong` | `#D4D0C9` | `border-line-strong` | 输入框边等需要更清楚的边 |
+
+#### 墨色 · Accent（**结构**：标题栏 / 主按钮 / focus）
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--accent` | `#1F1D1B` | `bg-accent` `text-accent` | 卡片深色标题栏、主按钮、focus 环。数值＝`--text`，但语义是「结构」不是「文字」 |
+| `--accent-hover` | `#3D3934` | `hover:bg-accent-hover` | 上述元素的 hover 态 |
+| `--accent-bg` | `#EBE8E4` | 作 CSS 变量用 | focus 时输入框外的浅色扩散：`0 0 0 3px var(--accent-bg)` |
+| `--accent-soft` | `#C6C1B9` | — | **定义了但当前未使用**（留着备用） |
+
+#### 角标 · Badge（slip 的 box 号方块）
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--badge-bg` | `#F2F0EC` | `bg-badge-bg` | box 号方块底 |
+| `--badge-line` | `#E0DBD4` | `border-badge-line` | box 号方块边 |
+| `--badge-ink` | `#4A453E` | `text-badge-ink` | box 号文字 |
+
+#### 蓝色 · Blue（**位置 + 品牌**）
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--prog` | `#2563EB` | `bg-prog` `text-prog` | 进度条、结果页滑块、页头 logo 标记（也是 logo 文件的蓝） |
+| `--prog-track` | `#DFE5EC` | `bg-prog-track` `border-prog-track` | 进度条未完成段的轨道色 |
+
+#### 语义 · 退税/正面（绿）
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--positive` | `#0F6E56` | `text-positive` | **退税金额**（结果页 hero、方案面板）——全工具唯一带「情绪」的数字 |
+| `--positive-bg` | `#E1F5EE` | — | 定义了但当前未使用（预留正面提示块底） |
+| `--positive-text` | `#04342C` | — | 同上，预留 |
+
+#### 语义 · 补税/负面（红）
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--negative` | `#A32D2D` | `text-negative` | **补税金额** |
+| `--negative-bg` | `#FCEBEB` | `bg-negative-bg` | error 级警告块底（Rationale） |
+| `--negative-text` | `#501313` | `text-negative-text` | error 级警告块文字 |
+
+#### 语义 · 警告（琥珀）
+
+| token | hex | Tailwind | 用途 |
+|---|---|---|---|
+| `--warning-bg` | `#FAEEDA` | `bg-warning-bg` | warning 级提示块底 |
+| `--warning-text` | `#854F0B` | `text-warning-text` | warning 级提示块文字 |
+
+#### 白色 · White
+
+`#FFFFFF`：既是 `--surface`（卡片底），也通过 `text-white` 用在深色标题栏和主按钮的**文字**上。不是独立 token。
+
+#### 非 token 的硬编码（全项目仅此三处）
+
+- `rgba(0,0,0,0.06)` — 分段控件选中态的极淡投影（`StrategySwitcher`）
+- `rgba(0,0,0,0.07)` / `rgba(0,0,0,0.04)` — 语言切换器的微投影（`LanguageSwitcher`）
+
+都是中性投影、非品牌色，可接受。**除此之外任何写死的颜色都应改成 token。**
 
 ### 字号：封闭的七级
 
@@ -64,6 +135,20 @@
 ### 圆角
 
 卡片 `9px`（`rounded-card`），控件 `6px`（`rounded-control`）。没有第三种。
+
+### 字体
+
+正文/UI 全用**系统字体栈**（`font-sans`，见 tailwind 配置）——不额外加载、跨平台稳、快。
+
+唯一例外是**页头的 wordmark「RoomToSave」**，用 **Plus Jakarta Sans 700**（`font-wordmark`）。
+理由：wordmark 跟正文用同一款字时不够「标识」；换一款几何 sans 就立起来了。
+实现走 `next/font/google`（`layout.tsx` 里，暴露成 `--font-wordmark` 变量 → tailwind
+`font-wordmark`），**构建时自托管**，不发运行时请求给 Google，静态导出无碍。
+只作用于 wordmark 那一个 `<span>`，别扩散到别处。
+
+> ⚠️ OG 分享图（`app/opengraph-image.png`，由 `/tmp/og.py` 用 Pillow 生成）里的
+> 「RoomToSave」仍是 Liberation Sans —— 沙箱里没有 Plus Jakarta 字体文件、也下不动。
+> 属次要表面的小不一致，想统一的话需要把字体文件弄进沙箱重生成。
 
 ---
 

@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { I18nProvider } from "@/i18n/I18nProvider";
 
+/*
+ * No webfont. The header lockup is an SVG with the wordmark already converted
+ * to outlines, so the brand type renders exactly as drawn with nothing to
+ * download; everything else runs on the system stack. (A Plus Jakarta Sans
+ * face used to be loaded here for the wordmark -- removed once the lockup
+ * replaced the live text.)
+ */
+
 const TITLE = "RoomToSave — RRSP & FHSA contribution planner";
 const DESCRIPTION =
   "Work out exactly how much to put into your RRSP and FHSA to cut this year's tax bill. Built for Canadian filers, including Quebec's RL-1, QPP2 and RAMQ.";
