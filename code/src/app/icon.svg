@@ -1,13 +1,14 @@
-<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<svg width="32" height="32" viewBox="140 67 612 612" xmlns="http://www.w3.org/2000/svg">
   <!--
-    Favicon. Next.js App Router serves any app/icon.svg as the site icon.
+    Favicon. Next.js App Router serves app/icon.svg as the site icon.
 
-    On a browser tab the mark sits small on a light strip, so unlike the header
-    version it gets a solid blue tile behind a white container -- the outline-on-
-    transparent version would vanish at 16px. Fill level (~46%) matches the mark
-    in components/common/Logo.tsx; keep the two in step by eye.
+    Same mark as the header lockup (public/roomtosave-logo.svg), just the icon.
+    The "water" (empty top + surface line) is negative space in the blue tile, so
+    a white backing sits behind it: on a browser tab the knockout would otherwise
+    show the tab-bar colour and invert on dark themes. Backing is inset a hair so
+    it never peeks past the tile's rounded edge.
   -->
-  <rect width="32" height="32" rx="7" fill="#2563EB"/>
-  <rect x="7" y="7" width="18" height="18" rx="5" fill="none" stroke="#FFFFFF" stroke-width="2.4"/>
-  <path d="M7 16.7 H25 V20 A5 5 0 0 1 20 25 H12 A5 5 0 0 1 7 20 Z" fill="#FFFFFF"/>
+  <rect x="143" y="70" width="606" height="606" rx="178" fill="#FFFFFF"/>
+  <path d="M572 67C671.411 67 752 147.589 752 247V499C752 597.635 672.665 677.74 574.326 678.985L572 679H320L317.674 678.985C220.109 677.75 141.25 598.891 140.015 501.326L140 499V247C140 147.589 220.589 67 320 67H572ZM320 122C250.964 122 195 177.964 195 247V414.873C219.759 412.524 248.818 418.42 273.118 429.968C322.305 453.341 381.847 467.018 446 467.018C510.153 467.018 569.695 453.341 618.882 429.968C643.182 418.42 672.241 412.524 697 414.873V247C697 177.964 641.036 122 572 122H320Z" fill="#2563EB"/>
+  <path d="M446 282C549.89 282 641.688 317.406 697 371.535V374.742C669.604 371.093 636.596 377.825 609.329 392.171C562.068 417.036 506.054 431.429 446 431.429C385.945 431.429 329.931 417.036 282.67 392.171C255.403 377.825 222.396 371.093 195 374.742V371.535C250.312 317.406 342.11 282 446 282Z" fill="#AEC7FF"/>
 </svg>
