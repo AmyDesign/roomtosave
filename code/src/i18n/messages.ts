@@ -43,6 +43,7 @@ export interface Messages {
     federalTaxWithheld: string;
     federalTaxWithheldQC: string;
     provincialTaxWithheld: string;
+    provincialTaxWithheldHelp: string;
     provincialTaxWithheldQC: string;
     cppContribution: string;
     cppContributionQC: string;
@@ -57,7 +58,6 @@ export interface Messages {
     transcribeHint: string;
     slipSection: string;
     rl1Section: string;
-    withholdingSection: string;
     fieldCount: string;
     /** English needs a singular; Chinese reuses the same string. */
     fieldCountOne: string;
@@ -236,7 +236,9 @@ export const messages: Record<Locale, Messages> = {
       grossHelp: "Total wages before any deductions.",
       federalTaxWithheld: "Federal tax withheld (Box 22)",
       federalTaxWithheldQC: "Federal tax withheld (Box 22)",
-      provincialTaxWithheld: "Provincial tax withheld",
+      provincialTaxWithheld: "Provincial tax withheld (Box 22)",
+      provincialTaxWithheldHelp:
+        "Outside Quebec, T4 Box 22 is a single combined amount. If your payroll statement does not split it, enter the whole Box 22 figure in the federal field and leave this at 0 — the calculation uses the total either way.",
       provincialTaxWithheldQC: "QC tax withheld (RL-1 Box E)",
       cppContribution: "CPP contribution (Box 16)",
       cppContributionQC: "QPP contribution (Box 17)",
@@ -247,7 +249,6 @@ export const messages: Record<Locale, Messages> = {
         "Copy the amounts from your slips. The grey block beside each field is its box number.",
       slipSection: "T4 slip",
       rl1Section: "RL-1 slip",
-      withholdingSection: "Provincial withholding",
       fieldCount: "{n} fields",
       fieldCountOne: "{n} field",
       cpp2MirrorHelp:
@@ -486,7 +487,9 @@ export const messages: Record<Locale, Messages> = {
       grossHelp: "扣除前的工资总额。",
       federalTaxWithheld: "已扣联邦税（Box 22）",
       federalTaxWithheldQC: "已扣联邦税（Box 22）",
-      provincialTaxWithheld: "已扣省税",
+      provincialTaxWithheld: "已扣省税（Box 22）",
+      provincialTaxWithheldHelp:
+        "魁省以外，T4 Box 22 是联邦税与省税的合计，单据上不分开列示。如果你的工资单没有拆分，把 Box 22 全额填在「已扣联邦税」栏，这里保持 0 即可——计算只用两者之和。",
       provincialTaxWithheldQC: "已扣魁省税（RL-1 Box E）",
       cppContribution: "CPP 供款（Box 16）",
       cppContributionQC: "QPP 供款（Box 17）",
@@ -496,7 +499,6 @@ export const messages: Record<Locale, Messages> = {
       transcribeHint: "照着单据抄写。每个字段左侧的灰块是它的框号。",
       slipSection: "T4 单据",
       rl1Section: "RL-1 单据",
-      withholdingSection: "省级预扣",
       fieldCount: "{n} 项",
       fieldCountOne: "{n} 项",
       cpp2MirrorHelp: "与 T4 Box 17A 相同，两张单据必须一致。",

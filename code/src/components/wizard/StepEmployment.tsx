@@ -134,7 +134,9 @@ export function StepEmployment() {
     );
   };
 
-  const t4Count = 4 + (hasCpp2 ? 1 : 0) + (isQC ? 1 : 0) + 1;
+  // gross, CPP, EI, federal tax, Box 26, plus one province-dependent field
+  // (QPIP Box 55 in Quebec, provincial tax withheld elsewhere).
+  const t4Count = 6 + (hasCpp2 ? 1 : 0);
 
   return (
     <div className="space-y-3.5">
@@ -148,7 +150,8 @@ export function StepEmployment() {
       </div>
 
       {/* Fields run in slip box order -- 14, 16/17, 16A/17A, 18, 22, 26, 55 --
-          reading down the left column then the right. */}
+          reading down the left column then the right. Box 22 occupies two rows
+          outside Quebec, where it covers federal and provincial tax together. */}
       <CollapsibleCard
         title={t("employment.slipSection")}
         meta={t("employment.fieldCount", { n: t4Count })}
@@ -185,6 +188,16 @@ export function StepEmployment() {
               ? t("employment.federalTaxWithheldQC")
               : t("employment.federalTaxWithheld"),
           )}
+          {/* Outside Quebec there is no separate provincial box -- Box 22 is one
+              combined figure. The field stays (some payroll statements do split
+              it, and the engine only uses the sum) but sits on the T4 card with
+              its box number, so it no longer reads as a slip of its own. */}
+          {!isQC &&
+            slipField(
+              "provincialTaxWithheld",
+              t("employment.provincialTaxWithheld"),
+              t("employment.provincialTaxWithheldHelp"),
+            )}
           <BoxField
             label={splitBoxRef(t("employment.cppPensionable")).name}
             boxNo="26"
@@ -247,17 +260,6 @@ export function StepEmployment() {
               description={t("employment.privateDrugCoverageHelp")}
             />
           </div>
-        </CollapsibleCard>
-      )}
-
-      {!isQC && (
-        <CollapsibleCard title={t("employment.withholdingSection")} meta="">
-          <BoxGrid rows={1} single>
-            {slipField(
-              "provincialTaxWithheld",
-              t("employment.provincialTaxWithheld"),
-            )}
-          </BoxGrid>
         </CollapsibleCard>
       )}
 
