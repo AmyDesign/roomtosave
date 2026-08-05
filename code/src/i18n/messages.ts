@@ -39,20 +39,29 @@ export interface Messages {
   employment: {
     title: string;
     gross: string;
+    grossHint: string;
     grossHelp: string;
-    federalTaxWithheld: string;
+    /** Outside QC, Box 22 is one combined figure -- see `incomeTaxDeducted`. */
     federalTaxWithheldQC: string;
-    provincialTaxWithheld: string;
-    provincialTaxWithheldHelp: string;
+    federalTaxWithheldQCHint: string;
+    incomeTaxDeducted: string;
+    incomeTaxDeductedHint: string;
+    incomeTaxDeductedHelp: string;
     provincialTaxWithheldQC: string;
+    provincialTaxWithheldQCHint: string;
     cppContribution: string;
+    cppContributionHint: string;
     cppContributionQC: string;
+    cppContributionQCHint: string;
     eiPremium: string;
+    eiPremiumHint: string;
     /** QC PPIP/QPIP premium (T4 Box 55 / RL-1 Box H) */
     ppipPremium: string;
+    ppipPremiumHint: string;
     ppipPremiumHelp: string;
     /** P1 TICKET-014: Box 26 pensionable earnings */
     cppPensionable: string;
+    cppPensionableHint: string;
     cppPensionableHelp: string;
     /** Page chrome for the slip-transcription layout */
     transcribeHint: string;
@@ -62,9 +71,12 @@ export interface Messages {
     /** English needs a singular; Chinese reuses the same string. */
     fieldCountOne: string;
     cpp2MirrorHelp: string;
+    cpp2MirrorHint: string;
     /** TICKET-030: CPP2/QPP2, T4 Box 16A/17A + RL-1 Box B.B */
     cpp2Contribution: string;
+    cpp2ContributionHint: string;
     cpp2ContributionQC: string;
+    cpp2ContributionQCHint: string;
     cpp2ContributionHelp: string;
     /** TICKET-033: QC RAMQ premium exemption */
     privateDrugCoverage: string;
@@ -81,31 +93,50 @@ export interface Messages {
     toggleHelp: string;
     ei: {
       section: string;
+      /** Who the section is for. Shown whether or not it is expanded. */
+      sectionHint: string;
       amount: string;
+      amountHint: string;
       amountHelp: string;
       taxWithheld: string;
+      taxWithheldHint: string;
       taxWithheldHelp: string;
       parental: string;
       parentalHelp: string;
     };
     selfEmployment: {
       section: string;
-      netIncome: string;
-      netIncomeHelp: string;
+      sectionHint: string;
+      /** Collected as gross + expenses; the form does the subtraction. */
+      grossIncome: string;
+      grossIncomeHint: string;
+      grossIncomeHelp: string;
+      expenses: string;
+      expensesHint: string;
+      expensesHelp: string;
+      /** Running total shown under the two inputs, e.g. "Net income  $38,000". */
+      netIncomeLabel: string;
+      netIncomeLossNote: string;
       cppNote: string;
     };
     /** P1 investment income (interest + eligible/non-eligible dividends + capital gains/losses) */
     investment: {
       section: string;
+      sectionHint: string;
       interest: string;
+      interestHint: string;
       interestHelp: string;
       eligibleDividends: string;
+      eligibleDividendsHint: string;
       eligibleDividendsHelp: string;
       nonEligibleDividends: string;
+      nonEligibleDividendsHint: string;
       nonEligibleDividendsHelp: string;
       capitalGains: string;
+      capitalGainsHint: string;
       capitalGainsHelp: string;
       capitalLosses: string;
+      capitalLossesHint: string;
       capitalLossesHelp: string;
       note: string;
     };
@@ -233,17 +264,27 @@ export const messages: Record<Locale, Messages> = {
     employment: {
       title: "Enter your T4 employment income",
       gross: "Gross employment income (Box 14)",
+      grossHint: "Box 14 on your T4 — your pay before any deductions.",
       grossHelp: "Total wages before any deductions.",
-      federalTaxWithheld: "Federal tax withheld (Box 22)",
       federalTaxWithheldQC: "Federal tax withheld (Box 22)",
-      provincialTaxWithheld: "Provincial tax withheld (Box 22)",
-      provincialTaxWithheldHelp:
-        "Outside Quebec, T4 Box 22 is a single combined amount. If your payroll statement does not split it, enter the whole Box 22 figure in the federal field and leave this at 0 — the calculation uses the total either way.",
+      federalTaxWithheldQCHint:
+        "Box 22 on your T4. In Quebec this is federal tax only — the provincial share is on the RL-1 below.",
+      incomeTaxDeducted: "Income tax deducted (Box 22)",
+      incomeTaxDeductedHint:
+        "Box 22 on your T4 — the tax already taken off your pay all year.",
+      incomeTaxDeductedHelp:
+        "Outside Quebec, T4 Box 22 is one combined figure covering both federal and provincial tax. Copy it across exactly as printed — there is no separate provincial box to split it into.",
       provincialTaxWithheldQC: "QC tax withheld (RL-1 Box E)",
+      provincialTaxWithheldQCHint:
+        "Box E on your RL-1 — the separate Quebec slip from your employer.",
       cppContribution: "CPP contribution (Box 16)",
+      cppContributionHint: "Box 16 on your T4.",
       cppContributionQC: "QPP contribution (Box 17)",
+      cppContributionQCHint: "Box 17 on your T4.",
       eiPremium: "EI premium (Box 18)",
+      eiPremiumHint: "Box 18 on your T4.",
       ppipPremium: "QPIP premium (Box 55)",
+      ppipPremiumHint: "Box 55 on your T4, or Box H on your RL-1.",
       ppipPremiumHelp: "Quebec Parental Insurance Plan premium from T4 Box 55 or RL-1 Box H. Only for QC residents.",
       transcribeHint:
         "Copy the amounts from your slips. The grey block beside each field is its box number.",
@@ -253,11 +294,18 @@ export const messages: Record<Locale, Messages> = {
       fieldCountOne: "{n} field",
       cpp2MirrorHelp:
         "Same as T4 Box 17A. Both slips must show the same amount.",
+      cpp2MirrorHint: "Box B.B on your RL-1 — the same amount as T4 Box 17A.",
       cppPensionable: "CPP pensionable earnings (Box 26)",
+      cppPensionableHint:
+        "Box 26 on your T4. If that box is blank, use the same figure as Box 14.",
       cppPensionableHelp:
         "Box 26 on your T4. Usually equals Box 14 (gross income), but may differ if you were under 18, over 70, or had partial-year exemptions. Defaults to Box 14 if you leave it the same. Used to properly split CPP into base / enhanced / overpayment refund.",
       cpp2Contribution: "Second additional CPP contribution (Box 16A)",
+      cpp2ContributionHint:
+        "Box 16A on your T4. Blank on the slip means leave it at 0.",
       cpp2ContributionQC: "Second additional QPP contribution (Box 17A / RL-1 Box B.B)",
+      cpp2ContributionQCHint:
+        "Box 17A on your T4. Blank on the slip means leave it at 0.",
       cpp2ContributionHelp:
         "CPP2/QPP2 - charged at 4% on earnings between the first ceiling ($71,300 in 2025) and the second ceiling ($81,200), so the maximum is $396. It appears in its own box on your slip, separate from Box 16/17, and is blank if you earned under the first ceiling. Fully deductible, which is why leaving it out costs you money. Leave at $0 if the box is blank on your slip.",
       privateDrugCoverage:
@@ -276,10 +324,15 @@ export const messages: Record<Locale, Messages> = {
         "Open this if you received EI benefits (T4E) or had self-employment income (T2125).",
       ei: {
         section: "EI benefits (T4E)",
+        sectionHint:
+          "Only if you collected EI this year — job loss, sickness, maternity or parental leave. Service Canada mails you a T4E slip.",
         amount: "EI benefits received (Box 14)",
+        amountHint: "Box 14 on your T4E — total benefits paid to you.",
         amountHelp:
           "Total EI benefits paid to you this year. Includes regular, sickness, parental, and other EI types.",
         taxWithheld: "Tax withheld on EI (Box 22)",
+        taxWithheldHint:
+          "Box 22 on your T4E. If nothing was withheld, leave it at 0.",
         taxWithheldHelp:
           "Income tax already deducted from your EI payments. Adds to your federal withholding.",
         parental: "These are maternity / parental / adoption EI benefits",
@@ -288,27 +341,50 @@ export const messages: Record<Locale, Messages> = {
       },
       selfEmployment: {
         section: "Self-employment income (T2125)",
-        netIncome: "Net self-employment income",
-        netIncomeHelp:
-          "Your gross self-employment income minus business expenses. Use the net number from your T2125 form.",
+        sectionHint:
+          "Only if you freelanced, contracted, or ran a small business. No slip arrives for this — it comes from your own records.",
+        grossIncome: "Money the business took in",
+        grossIncomeHint:
+          "Everything you were paid this year, before subtracting anything.",
+        grossIncomeHelp:
+          "Total fees, sales, and commissions from your own work — Part 3C of Form T2125. Count what you were paid, not what you were owed, unless you file on an accrual basis.",
+        expenses: "Business expenses",
+        expensesHint:
+          "What you spent to earn it — supplies, software, mileage, home office.",
+        expensesHelp:
+          "Costs you incurred to earn that income, and only the business share of anything you also use personally. Part 4 of Form T2125 lists the categories. Leave at 0 if you had none.",
+        netIncomeLabel: "Net self-employment income",
+        netIncomeLossNote:
+          "Expenses exceed income, so this is a business loss. That is allowed, and it reduces your total income.",
         cppNote:
           "Self-employed individuals owe both employer + employee CPP (9.9% base + 2% enhanced). We\'ll calculate and apply the CPP deduction and credit automatically based on this net income.",
       },
       investment: {
         section: "Investment income (T5 / T3 / Schedule 3)",
+        sectionHint:
+          "Only if you earned interest or dividends, or sold an investment this year. Your bank and broker mail the slips by early spring.",
         interest: "Interest income (T5 Box 13)",
+        interestHint:
+          "Box 13 on the T5 from your bank \u2014 savings account, GIC, or bond interest.",
         interestHelp:
           "Canadian-source interest from bank accounts, GICs, bonds, etc. 100% included in income at your marginal tax rate.",
         eligibleDividends: "Eligible dividends (T5 Box 24)",
+        eligibleDividendsHint:
+          "Box 24 on your T5 \u2014 copy it as printed. Ignore boxes 25 and 26; we work those out.",
         eligibleDividendsHelp:
-          "Dividends from Canadian-controlled public corporations (large corps). Enter the actual amount received \u2014 we automatically apply the 38% gross-up and the federal + provincial dividend tax credit.",
+          "Dividends from Canadian-controlled public corporations (large corps). Enter the actual amount received \u2014 we automatically apply the 38% gross-up and the federal + provincial dividend tax credit, which is what boxes 25 and 26 on the slip show.",
         nonEligibleDividends: "Non-eligible dividends (T5 Box 10)",
+        nonEligibleDividendsHint:
+          "Box 10 on your T5 \u2014 copy it as printed. Ignore boxes 11 and 12.",
         nonEligibleDividendsHelp:
-          "Dividends from Canadian private corporations (CCPCs) or small businesses. Enter the actual amount received \u2014 we apply the 15% gross-up and the reduced dividend tax credit.",
+          "Dividends from Canadian private corporations (CCPCs) or small businesses. Enter the actual amount received \u2014 we apply the 15% gross-up and the reduced dividend tax credit, which is what boxes 11 and 12 on the slip show.",
         capitalGains: "Capital gains (Schedule 3)",
+        capitalGainsHint:
+          "Profit on investments you sold this year. Your broker's annual summary or T5008 has the numbers. Nothing sold, leave at 0.",
         capitalGainsHelp:
-          "Total capital gains realized this year from sale of investments, real estate, etc. Only 50% is included in taxable income (inclusion rate). Enter your gross gains before losses.",
+          "Total capital gains realized this year from sale of investments, real estate, etc. Only 50% is included in taxable income (inclusion rate). Enter your gross gains before losses. There is no single box for this \u2014 it is a Schedule 3 total, so add in T5 box 18 (capital gains dividends) and T3 box 21 if your slips show them.",
         capitalLosses: "Capital losses (Schedule 3)",
+        capitalLossesHint: "The same, for anything you sold at a loss.",
         capitalLossesHelp:
           "Total capital losses this year. Applied against capital gains \u2014 net gains below zero produce no income inclusion. Excess losses can be carried back 3 years or forward indefinitely.",
         note: "Foreign dividends and the $250K+ two-thirds capital gains inclusion rate are not yet supported \u2014 coming in a later update.",
@@ -484,17 +560,27 @@ export const messages: Record<Locale, Messages> = {
     employment: {
       title: "输入你的 T4 工资收入",
       gross: "工资总收入（Box 14）",
+      grossHint: "T4 单据的框 14 —— 扣任何东西之前的工资。",
       grossHelp: "扣除前的工资总额。",
-      federalTaxWithheld: "已扣联邦税（Box 22）",
       federalTaxWithheldQC: "已扣联邦税（Box 22）",
-      provincialTaxWithheld: "已扣省税（Box 22）",
-      provincialTaxWithheldHelp:
-        "魁省以外，T4 Box 22 是联邦税与省税的合计，单据上不分开列示。如果你的工资单没有拆分，把 Box 22 全额填在「已扣联邦税」栏，这里保持 0 即可——计算只用两者之和。",
+      federalTaxWithheldQCHint:
+        "T4 单据的框 22。魁省的这一框只含联邦税，省税在下面的 RL-1 单据上。",
+      incomeTaxDeducted: "已扣所得税（Box 22）",
+      incomeTaxDeductedHint:
+        "T4 单据的框 22 —— 全年从工资里已经预扣走的税。",
+      incomeTaxDeductedHelp:
+        "魁省以外，T4 Box 22 是联邦税与省税的合计，单据上只有这一个框，没有单独的省税框。照单据原样抄写即可，不需要自己拆分。",
       provincialTaxWithheldQC: "已扣魁省税（RL-1 Box E）",
+      provincialTaxWithheldQCHint:
+        "RL-1 单据的框 E —— 雇主另外发的那张魁省单据。",
       cppContribution: "CPP 供款（Box 16）",
+      cppContributionHint: "T4 单据的框 16。",
       cppContributionQC: "QPP 供款（Box 17）",
+      cppContributionQCHint: "T4 单据的框 17。",
       eiPremium: "EI 保费（Box 18）",
+      eiPremiumHint: "T4 单据的框 18。",
       ppipPremium: "QPIP 保费（Box 55）",
+      ppipPremiumHint: "T4 单据的框 55，或 RL-1 的框 H。",
       ppipPremiumHelp: "魁北克省父母保险计划保费，来自 T4 Box 55 或 RL-1 Box H。仅限 QC 居民。",
       transcribeHint: "照着单据抄写。每个字段左侧的灰块是它的框号。",
       slipSection: "T4 单据",
@@ -502,11 +588,15 @@ export const messages: Record<Locale, Messages> = {
       fieldCount: "{n} 项",
       fieldCountOne: "{n} 项",
       cpp2MirrorHelp: "与 T4 Box 17A 相同，两张单据必须一致。",
+      cpp2MirrorHint: "RL-1 单据的框 B.B —— 和 T4 框 17A 是同一个数。",
       cppPensionable: "CPP 可计养老金收入（Box 26）",
+      cppPensionableHint: "T4 单据的框 26。那一框如果是空的，填框 14 的数。",
       cppPensionableHelp:
         "T4 上的 Box 26。通常等于 Box 14（总收入），但如果你未满 18 岁、超过 70 岁或部分年度免除，则可能不同。留空则默认等于 Box 14。用于正确拆分 CPP 基础 / 增强 / 多缴退款。",
       cpp2Contribution: "CPP 第二附加供款（Box 16A）",
+      cpp2ContributionHint: "T4 单据的框 16A。单据上没有这一框就留 0。",
       cpp2ContributionQC: "QPP 第二附加供款（Box 17A / RL-1 Box B.B）",
+      cpp2ContributionQCHint: "T4 单据的框 17A。单据上没有这一框就留 0。",
       cpp2ContributionHelp:
         "CPP2/QPP2 —— 对第一上限（2025 年 $71,300）到第二上限（$81,200）之间的收入按 4% 征收，因此最高 $396。它在工资单上有独立的框，与 Box 16/17 分开；收入低于第一上限时该框为空。这笔可全额扣除，漏填会多缴税。若你单据上该框为空，保持 $0 即可。",
       privateDrugCoverage: "我有私人处方药保险（如雇主团体计划）",
@@ -524,10 +614,14 @@ export const messages: Record<Locale, Messages> = {
         "如果你收到了 EI 福利（T4E）或有自雇收入（T2125），请展开填写。",
       ei: {
         section: "EI 福利（T4E）",
+        sectionHint:
+          "今年领过失业金才填 —— 失业、病假、产假或育儿假。Service Canada 会寄给你一张 T4E 单据。",
         amount: "EI 福利金额（Box 14）",
+        amountHint: "T4E 单据的框 14 —— 全年发给你的福利总额。",
         amountHelp:
           "本年度收到的全部 EI 福利，包括普通、病假、育儿及其他 EI 类型。",
         taxWithheld: "EI 已扣税（Box 22）",
+        taxWithheldHint: "T4E 单据的框 22。没有扣过税就留 0。",
         taxWithheldHelp:
           "EI 付款中已扣除的所得税，计入联邦预扣税总额。",
         parental: "这是产假 / 育儿假 / 收养假 EI 福利",
@@ -536,27 +630,46 @@ export const messages: Record<Locale, Messages> = {
       },
       selfEmployment: {
         section: "自雇收入（T2125）",
-        netIncome: "自雇净收入",
-        netIncomeHelp:
-          "自雇总收入减去经营费用后的净额。使用 T2125 表格上的净数。",
+        sectionHint:
+          "接私活、做自由职业或开小生意才填。这一项没有单据，数字来自你自己的记账。",
+        grossIncome: "生意收进来的钱",
+        grossIncomeHint: "今年别人付给你的全部钱，扣成本之前。",
+        grossIncomeHelp:
+          "你靠自己干活收到的服务费、货款和佣金总额 —— 对应 T2125 表格的 Part 3C。按实际收到的记，除非你用权责发生制报税。",
+        expenses: "经营支出",
+        expensesHint: "为了赚这笔钱花掉的成本 —— 材料、软件、车油、家庭办公室。",
+        expensesHelp:
+          "为赚取这笔收入而产生的成本；公私两用的东西只能算业务占的那一部分。T2125 表格 Part 4 列出了所有类别。没有支出就留 0。",
+        netIncomeLabel: "自雇净收入",
+        netIncomeLossNote:
+          "支出超过收入，也就是经营亏损。这是允许的，会相应减少你的总收入。",
         cppNote:
           "自雇人士需同时缴纳雇主 + 雇员 CPP（9.9% 基础 + 2% 增强）。我们会根据此净收入自动计算并应用 CPP 扣减和抵免。",
       },
       investment: {
         section: "投资收入（T5 / T3 / Schedule 3）",
+        sectionHint:
+          "有利息、股息，或者今年卖过投资才填。银行和券商开春前会把单据寄给你。",
         interest: "利息收入（T5 Box 13）",
+        interestHint: "银行寄来的 T5 单据框 13 —— 存款、GIC、债券的利息。",
         interestHelp:
-          "加拿大来源的银行账户、GIC、傺券等利息。100% 计入收入，按边际税率征税。",
+          "加拿大来源的银行账户、GIC、债券等利息。100% 计入收入，按边际税率征税。",
         eligibleDividends: "合格股息（T5 Box 24）",
+        eligibleDividendsHint:
+          "T5 单据的框 24，原样抄。框 25 和 26 不用管，我们会算。",
         eligibleDividendsHelp:
-          "来自加拿大上市公司（大型公司）的股息。请输入实际收到的金额 — 我们自动应用 38% 上调和联邦 + 省股息税收抵免。",
+          "来自加拿大上市公司（大型公司）的股息。请输入实际收到的金额 — 我们自动应用 38% 上调和联邦 + 省股息税收抵免，也就是单据上框 25 和 26 的那两个数。",
         nonEligibleDividends: "非合格股息（T5 Box 10）",
+        nonEligibleDividendsHint: "T5 单据的框 10，原样抄。框 11 和 12 不用管。",
         nonEligibleDividendsHelp:
-          "来自加拿大私人公司（CCPC）或小型企业的股息。请输入实际收到的金额 — 我们应用 15% 上调和较低的股息税收抵免。",
+          "来自加拿大私人公司（CCPC）或小型企业的股息。请输入实际收到的金额 — 我们应用 15% 上调和较低的股息税收抵免，也就是单据上框 11 和 12 的那两个数。",
         capitalGains: "资本利得（Schedule 3）",
+        capitalGainsHint:
+          "今年卖掉投资赚的钱。券商的年度报表或 T5008 上有。没卖过就留 0。",
         capitalGainsHelp:
-          "本年度出售投资、房产等实现的资本利得总额。50% 计入应税收入（包含率）。请输入扣除损失前的总利得。",
+          "本年度出售投资、房产等实现的资本利得总额。50% 计入应税收入（包含率）。请输入扣除损失前的总利得。这一项没有单一的框号，它是 Schedule 3 的汇总数 —— 如果你的单据上有 T5 框 18（资本利得股息）或 T3 框 21，也要一并加进来。",
         capitalLosses: "资本损失（Schedule 3）",
+        capitalLossesHint: "同样是今年卖出的，但卖亏了的那部分。",
         capitalLossesHelp:
           "本年度资本损失。用于抵消资本利得 — 净利得低于零时不计入收入。多余损失可向前结转 3 年或无限期向后结转。",
         note: "外国股息和 $250K+ 的三分之二资本利得包含率尚未支持 — 将在后续更新中提供。",

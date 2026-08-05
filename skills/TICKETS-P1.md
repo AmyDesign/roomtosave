@@ -218,6 +218,60 @@
 - **验证：** QC5 baseline 勾选前净退 $502.24 → 勾选后 **$1,257.24**，差额正好 **$755.00**；不传该字段时行为不变（无回归）；非魁省勾选无副作用。
 - **回归测试：** `quebec.test.ts` "private drug coverage exemption"（收费/豁免/默认/非魁省 四条）。
 
+### TICKET-038: T4 Box 22 被拆成两栏且都标「22」，用户可能把同一笔钱填两遍
+- **状态：** ✅ **已修复**（2026-08-05）— 用户测试 Step 2 时发现
+- **Bug：** 非魁省的 T4 卡片上同时有「已扣联邦税 (Box 22)」和「已扣省税 (Box 22)」两栏，徽章都是 22。看起来像标错了，实际上两个数字都没错——**T4 的 Box 22「Income tax deducted」本来就是联邦 + 省税的合计，魁省以外根本没有单独的省税框**（[CRA T4 slip](https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/tax-slips/understand-your-tax-slips/t4-slips/t4-statement-remuneration-paid.html)）。问题是把一个框拆成两栏呈现，用户很可能把 Box 22 全额在两栏各填一遍，导致预扣税翻倍、退税虚高。
+- **修复：**
+  - `StepEmployment.tsx`：非魁省只渲染一栏「已扣所得税 (Box 22)」。该栏**读**取 `federalTaxWithheld + provincialTaxWithheld` 之和，**写**回时全额进 `federalTaxWithheld` 并把 `provincialTaxWithheld` 清零——旧存档或从魁省切过来的残留值都会正确显示为总额，首次编辑即归一，不会凭空少一笔。
+  - `useFormStore.ts`：sampleData 的 7000/3600 归并为 10600/0，总额不变，示例数据形状与新 UI 一致。
+  - `messages.ts`：删除 `provincialTaxWithheld` / `provincialTaxWithheldHelp`（非魁省版），新增 `incomeTaxDeducted` + `Hint` + `Help`。
+  - 字段计数 `t4Count` 改为 `5 + (isQC ? 1 : 0) + (hasCpp2 ? 1 : 0)`。
+- **魁省不受影响：** QC 的 T4 Box 22 确实只含联邦税，省税在 RL-1 Box E，所以魁省保持双栏结构不动。
+- **引擎无变化：** `calculator.ts` 一直是 `federalTaxWithheld + provincialTaxWithheld` 求和，合并前后计算结果完全相同。
+- **验证：** 服务端渲染 ON / QC 两套界面逐字段比对——ON 只有一个 22 且显示 11000（= 7000 + 4000 折叠值），QC 保持 T4 Box 22 + Box 55 + RL-1 Box E + B.B 共 7 项。tsc 0 error。
+
+### TICKET-039: Other income 各栏丢失框号；无框号的栏输入框未左对齐
+- **状态：** ✅ **已修复**（2026-08-05）— 用户测试时发现「这几个框我不知道该填什么」
+- **Bug（两个）：**
+  1. `amountField()` 调了 `splitBoxRef(rawLabel)` 拿到框号，却只用了 `.name`，**把 `boxNo` 直接丢弃**。于是标签里的「(T5 Box 13)」被剥掉，徽章也不渲染，框号信息整个消失。T4 卡片走的是 `slipField()`，有传 `boxNo`，所以只有 Other income 受影响。
+  2. `splitBoxRef` 用 `tag.replace(/Box\s*/gi,"").split("/")[0]` 解析，遇到「T5 Box 13」会得出 `"T5 13"`——5 个字符塞不进 54px 徽章。
+- **修复：**
+  - `splitBoxRef` 改为 `tag.match(/Box\s*([A-Za-z0-9.]+)/i)?.[1]`，只取第一个框号：「T5 Box 13」→ `13`，「Box 17A / RL-1 Box B.B」→ `17A`，「Schedule 3」「T2125」→ 无框号（不臆造）。
+  - `amountField` 把 `boxNo` 传给 `BoxField`。现在 EI 14 / 22、利息 13、合格股息 24、非合格股息 10 都有徽章。
+  - **无框号的字段**（自雇两栏、资本利得、资本损失）先试过留等宽占位对齐，用户实测后要求改为**输入框占满整列**、左边缘与标签和提示文字齐平；`reserveBox` 逻辑随之删除。
+- **为什么资本利得没有框号：** 它是 Schedule 3 的汇总数，可由 T5 框 18（资本利得股息）、T3 框 21、T5008 及自行出售记录合并而来，标任何单一框号都会误导。这一点已写进该栏的长解释。
+- **验证：** 渲染检查逐字段打印徽章——4 个 `full`（无徽章、全宽），其余带正确框号，无重复。
+
+### TICKET-040: 字段说明藏在 hover tooltip 里，等于不存在
+- **状态：** ✅ **已修复**（2026-08-05）— 用户以第一用户身份测试时反馈「我自己都不会填，那用户也不会填」
+- **根本原因（回归）：** 早期的 `FieldRow.tsx` 把 help 渲染成标签下方一行常驻小字（`<p className="text-label text-ink-muted mt-0.5">`）。改版换成 `BoxField` 后，同一个 `help` 变成了 `title={help}` ——浏览器原生 tooltip：需悬停约 1 秒才出现、鼠标移开即消失、**触摸屏完全无法触发**。这一页写了 12 条说明文案，改版后一条都看不见。`FieldRow.tsx` 至今仍在仓库里（标注 SUPERSEDED、无人引用），是这次定位问题的直接证据。
+- **修复 —— 说明分两层：**
+  - **`hint`（常驻）**：每个输入框下方一行灰字，只回答「这个数从哪张单据的哪个框抄」和「没有就留 0」。共 25 条，中英双语。
+  - **`help`（按需）**：原有长解释全部保留，改由标签旁一个 `<button>` 圆形「?」触发，就地展开。带 `aria-expanded` / `aria-controls`，触摸、键盘、读屏均可用。
+  - `CollapsibleCard.tsx` 的 `CollapsibleRow` 新增 `subtitle`，**折叠状态下也显示**，让用户在展开前就知道这一节是否与自己有关（例：「今年领过失业金才填——失业、病假、产假或育儿假。Service Canada 会寄给你一张 T4E 单据」）。
+- **文案依据：** 每条 hint 涉及的框号 / 行号均已向 CRA 官方页面核实——[T5](https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/tax-slips/understand-your-tax-slips/t5-slips/t5-statement-investment-income-slip-information-individuals.html)（框 10/11/12、13、18、24/25/26）、[T4E](https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/tax-slips/understand-your-tax-slips/t4-slips/t4e-statement-employment-insurance-other-benefits.html)（框 14、22）、[T2125 Part 5](https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships/report-business-income-expenses/completing-form-t2125/net-income-loss-section-form-t2125.html)（line 9946）、[T5008](https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/tax-slips/understand-your-tax-slips/t5-slips/t5008-statement-securities-transactions-slip-information-individuals.html)。
+  - 顺带在合格 / 非合格股息的 hint 里写明「框 25、26 不用管，我们会算」——回应用户对 Wealthsimple 逐框抄写界面的疑问：WS 是正式报税产品需原样上报，本工具只收实际金额、自行做上调与抵免。
+- **验证：** 渲染检查确认 ON / QC 每个字段的 hint 均已输出（无一条 MISSING）；新增 `__keys_check.ts` 校验 i18n 中英 key 对齐——191 : 191，无缺失、无空串。
+
+### TICKET-041: 自雇净收入要求用户自己做减法
+- **状态：** ✅ **已修复**（2026-08-05）— 修 TICKET-040 时顺带发现
+- **问题：** 「自雇净收入」一栏要求用户自行计算 `总收入 − 经营支出` 后填入。这是全页唯一要求用户做算术的地方，与产品原则「用户不需要做任何计算」冲突，且算错无从校验。
+- **修复：**
+  - `types.ts`：`IncomeInput.selfEmployment` 由 `{ netIncome }` 扩展为 `{ netIncome, grossIncome?, expenses? }`。`netIncome`（T2125 line 9946）仍是引擎唯一读取的字段；另两个只为让存档重新打开时两栏都还在。
+  - `StepEmployment.tsx`：改收「生意收进来的钱」+「经营支出」两栏，下方以 sunken 条实时显示算出的净收入。支出大于收入时追加一句说明，讲清经营亏损是允许的、会相应减少总收入。
+  - **向后兼容：** 旧存档只有 `netIncome` 时，回退显示为「总收入 = netIncome、支出 = 0」，净额不变，不丢数据。
+- **引擎无变化：** `income.ts` / `calculator.ts` 读的仍是 `netIncome`；`calculateSelfEmploymentCpp` 对 `netIncome <= 0` 已有 early return，亏损场景无需额外处理。
+- **验证：** 渲染检查确认旧形状 `{ netIncome: 12000 }` 正确迁移为 总收入 12000 / 支出 0 / 净额 12000。
+
+### TICKET-042: header 滚动时消失
+- **状态：** ✅ **已完成**（2026-08-05）— 用户要求
+- **改动：** `page.tsx` 的 `<header>` 加 `sticky top-0 z-40`。
+  - 用 `sticky` 而非 `fixed`：元素仍在文档流内，下方 `<main>` 无需补偿性 padding，首屏也不会有内容被压在栏下。
+  - 背景 `bg-surface` 不透明 + `border-b border-line`，内容滚过时分隔清晰。
+  - 小屏 `py-5 → py-3`：固定栏全程占用视口，原 84px 在手机上过重。
+  - 全站唯一 z-index（`Progress` 的圆点是自身层叠上下文内的 `z-10`），无冲突；`html`/`body` 及祖先均无 `overflow` 裁剪，`sticky` 生效。
+- **未做：** 进度条仍随页面滚动（用户明确表示这轮不改）。
+
 ---
 
 ## ✅ Done（新增）

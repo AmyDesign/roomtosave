@@ -73,6 +73,10 @@ export function CollapsibleCard({
 interface SubProps {
   title: ReactNode;
   tag?: ReactNode;
+  /** Who this section is for, in plain words. Shown open or closed: the whole
+   *  question at this level is "does this one apply to me", and a title like
+   *  "Investment income (T5 / T3 / Schedule 3)" does not answer it. */
+  subtitle?: ReactNode;
   /** Shown when collapsed so a filled-in section is visible without opening. */
   summary?: ReactNode;
   open: boolean;
@@ -88,6 +92,7 @@ interface SubProps {
 export function CollapsibleRow({
   title,
   tag,
+  subtitle,
   summary,
   open,
   onToggle,
@@ -99,17 +104,26 @@ export function CollapsibleRow({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="w-full flex items-center gap-2.5 py-3.5 text-left text-ink hover:text-ink-secondary transition-colors"
+        className="w-full flex items-start gap-2.5 py-3.5 text-left text-ink hover:text-ink-secondary transition-colors"
       >
         <Chevron
-          className={cn("text-ink-muted", open ? "" : "-rotate-90")}
+          className={cn("mt-1 text-ink-muted", open ? "" : "-rotate-90")}
         />
-        <span className="flex-1 flex items-baseline gap-2 min-w-0">
-          <span className="text-body">{title}</span>
-          {tag && <span className="text-micro text-ink-muted">{tag}</span>}
+        <span className="flex-1 min-w-0">
+          <span className="flex items-baseline gap-2 min-w-0">
+            <span className="text-body">{title}</span>
+            {tag && <span className="text-micro text-ink-muted">{tag}</span>}
+          </span>
+          {subtitle && (
+            <span className="mt-0.5 block text-micro leading-snug text-ink-muted">
+              {subtitle}
+            </span>
+          )}
         </span>
         {!open && summary && (
-          <span className="text-label text-ink-muted tabular">{summary}</span>
+          <span className="mt-0.5 shrink-0 text-label text-ink-muted tabular">
+            {summary}
+          </span>
         )}
       </button>
       {open && <div className="pb-4">{children}</div>}

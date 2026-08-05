@@ -77,8 +77,11 @@ const sampleData: TaxInput = {
   income: {
     employment: {
       gross: 68000,
-      federalTaxWithheld: 7000,
-      provincialTaxWithheld: 3600,
+      // $10,600 of withholding, held as one figure because that is how Box 22
+      // prints outside Quebec. It used to be split 7000/3600; the engine adds
+      // the two halves, so the totals and every downstream number are the same.
+      federalTaxWithheld: 10600,
+      provincialTaxWithheld: 0,
       cppContribution: 3837.75,
       eiPremium: 1077.48,
       cppPensionableEarnings: 68000,

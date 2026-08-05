@@ -209,7 +209,17 @@ export interface BenefitIncome {
 
 export interface IncomeInput {
   employment?: EmploymentIncome;
-  selfEmployment?: { netIncome: number };
+  /**
+   * `netIncome` (T2125 line 9946) is what the engine taxes. `grossIncome` and
+   * `expenses` are what the form collects -- asking someone to subtract two
+   * numbers themselves is asking for an arithmetic slip -- and are kept only so
+   * a saved return reopens with both halves still filled in.
+   */
+  selfEmployment?: {
+    netIncome: number;
+    grossIncome?: number;
+    expenses?: number;
+  };
   benefits?: BenefitIncome;
   investment?: InvestmentIncome;
   rental?: { netIncome: number };
