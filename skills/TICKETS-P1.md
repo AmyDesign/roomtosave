@@ -272,6 +272,27 @@
   - 全站唯一 z-index（`Progress` 的圆点是自身层叠上下文内的 `z-10`），无冲突；`html`/`body` 及祖先均无 `overflow` 裁剪，`sticky` 生效。
 - **未做：** 进度条仍随页面滚动（用户明确表示这轮不改）。
 
+### TICKET-043: 5 个引擎测试期望值过期（非 bug，待重新 baseline）
+- **Status:** Todo
+- **发现方式:** 2026-08-05 做 TICKET-038~042 的 UI 改动时跑 `npx vitest run`，发现 313 项里有 5 项失败。经排查**与本次 UI 改动无关**——测试文件只 import `lib/tax/*`，而本次只动了 `components/` + `i18n/` + `store/` + `types.ts`。这 5 项在改动前就是红的。
+- **结论：引擎没有 bug。** 5 项全部是**后来的 ticket 有意改了行为，但早期测试的期望值没跟着更新**。三处差额都能被精确算式整除，不是浮点误差或近似偏差：
+
+| # | 测试 | 差额 | 根因 |
+|---|---|---:|---|
+| 1 | `clawbacks-selfemp` 自雇 $100K | **$792.00** | TICKET-030 的自雇 CPP2 |
+| 2 | `optimizer` max_refund BPA 边界 | 标签不符 | TICKET-037 的边际收益护栏 |
+| 3–5 | `quebec` CASE 7 自雇 $50K | **$192.00** 及其连锁 | TICKET-031 的自雇 QPIP 扣除 |
+
+- **逐项分析：**
+  1. **`clawbacks-selfemp.test.ts:198`「自雇 $100K → pensionable cap」** — 期望 4712.10，引擎 5504.10，差 **792.00**，正好等于自雇 CPP2 `(81200 − 71300) × 4% × 2 = 792`。测试公式 `pensionable × 0.0495 + pensionable × 0.02` 写于 TICKET-013，当时 CPP2 尚未建模；TICKET-030 加入后引擎多扣这一项是正确的，**公式少了一个加项**。
+  2. **`optimizer.test.ts:303`「额度大到能推过 BPA → 在 BPA 边界停下」** — 期望策略标签 `max_refund_bpa_capped`，实得 `diminishing_returns_capped`。TICKET-037 的 `findDiminishingReturnPoint()` 是**对所有策略统一施加**的（位置在 solver 之后、`splitContribution` 之前），因此该场景先被边际收益护栏收窄，标签随之改变。测试断言的是 TICKET-037 之前的语义；同一测试里 `taxableIncome` 落在 16128–16130 的断言也基于旧行为。
+  3. **`quebec.test.ts` CASE 7「QC 2025 自雇 $50K」三条** — `taxableIncome` 期望 46559、引擎 46367，差 **192.00**，正好等于 `50000 × (0.878% − 0.494%)`：TICKET-031 把自雇 QPIP 拆成「雇员费率那半 0.494% = $247 走抵免线 31215」+「超出的 0.384% = $192 走扣除线 22300」，合计 $439。`netProvincialTax`（差 $75.68）与 `refundOrOwing`（差 $310.17）都是这 $192 的连锁结果。CASE 7 的期望值是 TICKET-031 之前定的。
+- **⚠️ 修复时的注意事项（这是本 ticket 暂不动手的原因）：**
+  - 第 1、2 项可以直接改：公式补上 CPP2 项、标签断言改成护栏语义即可，对错能独立判定。
+  - **第 3–5 项是对账测试**，期望值来自 Wealthsimple 实测。若直接把 46559 改成引擎当前输出的 46367，它就从「对账」退化成「快照」——只能证明引擎没变，不再能证明引擎是对的。TICKET-031 当时拿 QC7 对过 WS，这三个数大概率没问题，但严格做法是**在 WS 上重跑一遍 QC 自雇 $50K**，用实测值重新 baseline。
+- **影响面：** 无用户可见影响。引擎行为符合 TICKET-030 / 031 / 037 的设计，且那三个 ticket 各自都做过 WS 对账。唯一代价是 `npm test` 长期有 5 条红色，会掩盖将来真正的回归。
+- **下一步：** 等 WS 重跑 QC 自雇 $50K 的四个数（`taxableIncome` / `netFederalTax` / `netProvincialTax` / `refundOrOwing`），一次性把 5 项全部修好。
+
 ---
 
 ## ✅ Done（新增）
